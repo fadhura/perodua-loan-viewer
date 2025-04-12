@@ -2,7 +2,14 @@
 import streamlit as st
 import pandas as pd
 
-st.set_page_config(page_title="Fadhu Perodua Financing Calculator", layout="centered")
+st.set_page_config(page_title="Fadhu Perodua Financing Calculator", layout="centered")\n("""
+<style>
+    .block-container {
+        max-width: 430px;
+        margin: auto;
+        padding: 1rem;
+    }
+</style>\n
 
 car_data = {
     "Axia": {"E": 23100, "G": 40190, "X": 41630, "SE": 45740, "AV": 51390},
@@ -94,4 +101,29 @@ st.markdown(f"**Monthly Payment (Custom Deposit RM {custom_deposit:,.0f})**: RM 
 st.markdown(f"**Loan Tenure**: {selected_tenure} years")
 st.markdown(f"**Interest Rate**: {selected_interest}%")
 
-st.markdown("*Calculations are based on DC Auto Pricelist, latest update April 2025.*")
+st.markdown("*Calculations are based on DC Auto Pricelist, latest update April 2025.*")\n("📄 Download Financing Summary as PDF"):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    pdf.cell(200, 10, txt=f"{selected_car} {selected_model} Financing Summary", ln=True, align='C')
+    pdf.ln(10)
+    pdf.set_font("Arial", size=11)
+    pdf.cell(200, 10, txt=f"OTR Price: RM {otr_base_price:,.2f}", ln=True)
+    if rebate > 0:
+        pdf.cell(200, 10, txt=f"Rebate Applied: {rebate_display}", ln=True)
+    pdf.cell(200, 10, txt=f"10% Deposit: RM {deposit_10_percent:,.2f}", ln=True)
+    pdf.cell(200, 10, txt=f"Monthly Payment (Full Loan): RM {monthly_full:,.2f}", ln=True)
+    pdf.cell(200, 10, txt=f"Monthly Payment (10% Deposit): RM {monthly_10_percent:,.2f}", ln=True)
+    pdf.cell(200, 10, txt=f"Monthly Payment (Custom Deposit RM {custom_deposit:,.0f}): RM {monthly_custom:,.2f}", ln=True)
+    pdf.cell(200, 10, txt=f"Loan Tenure: {selected_tenure} years", ln=True)
+    pdf.cell(200, 10, txt=f"Interest Rate: {selected_interest}%", ln=True)
+
+    pdf_output = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
+    pdf.output(pdf_output.name)
+
+    with open(pdf_output.name, "rb") as f:
+        base64_pdf = base64.b64encode(f.read()).decode("utf-8")
+        href = f'<a href="data:application/pdf;base64,{base64_pdf}" download="Fadhu_Financing_Summary.pdf">📥 Click here to download your PDF</a>'
+        st.markdown(href, unsafe_allow_html=True)
+
