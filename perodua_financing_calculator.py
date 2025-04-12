@@ -14,68 +14,25 @@ car_data = {
 }
 
 color_codes = {
-    "S28": "#C0C0C0",  # Glittering Silver
-    "S43": "#4B4B4B",  # Granite Grey
-    "W09": "#FFFFFF",  # Ivory White
-    "B89": "#00AEEF",  # Coral Blue
-    "R69": "#B22222",  # Lava Red
-    "B81": "#0077BE",  # Ocean Blue
-    "R67": "#8B0000",  # Garnet Red
-    "B77": "#1E90FF",  # Electric Blue
-    "R76": "#8B1E3F",  # Cranberry Red
-    "W25": "#F5F5F5",  # Pearl Diamond White
-    "B79": "#0033A0",  # Cobalt Blue
-    "R75": "#8B0000",  # Pearl Delima Red
-    "XJ3": "#DDDDDD",  # Two Tone Pearl Diamond White
-    "XJ2": "#660000",  # Two Tone Pearl Delima Red
-    "X16": "#2E2E2E",  # Elegant Black
-    "T35": "#5C4033",  # Vintage Brown
+    "S28": "#C0C0C0", "S43": "#4B4B4B", "W09": "#FFFFFF", "B89": "#00AEEF", "R69": "#B22222",
+    "B81": "#0077BE", "R67": "#8B0000", "B77": "#1E90FF", "R76": "#8B1E3F", "W25": "#F5F5F5",
+    "B79": "#0033A0", "R75": "#8B0000", "XJ3": "#DDDDDD", "XJ2": "#660000", "X16": "#2E2E2E", "T35": "#5C4033"
 }
 
 variant_colors = {
-    "Axia": {
-        "E": ["S43", "W09", "S28"],
-        "G": ["S43", "W09", "S28", "B89", "R69"],
-        "X": ["S43", "W09", "S28", "B89", "R69"],
-        "SE": ["S43", "W09", "S28", "B89", "R69"],
-        "AV": ["S43", "W09", "S28", "B89", "R69"]
-    },
-    "Bezza": {
-        "G": ["S43", "W09", "S28", "B81", "R67"],
-        "X": ["S43", "W09", "S28", "B81", "R67"],
-        "AV": ["S43", "W09", "S28", "B81", "R67"]
-    },
-    "Myvi": {
-        "G": ["W09", "S28", "B77"],
-        "X": ["S43", "W09", "S28", "B77", "R76"],
-        "H": ["S43", "W09", "S28", "B77", "R76"],
-        "AV": ["S43", "W09", "S28", "B77", "R76"]
-    },
-    "Ativa": {
-        "X": ["S43", "S28", "W25"],
-        "H": ["S43", "S28", "B79", "W25", "R75"],
-        "AV": ["S43", "S28", "W25", "R75", "XJ3", "XJ2"]
-    },
-    "Alza": {
-        "X": ["W09", "S28", "R67", "X16", "T35"],
-        "H": ["W09", "S28", "R67", "X16", "T35"],
-        "AV": ["W09", "S28", "R67", "X16", "T35"]
-    },
-    "Aruz": {
-        "X": ["S43", "W09", "S28", "B77", "R67", "X16"],
-        "AV": ["S43", "W09", "S28", "B77", "R67", "X16"]
-    }
+    "Axia": {"E": ["S43", "W09", "S28"], "G": ["S43", "W09", "S28", "B89", "R69"], "X": ["S43", "W09", "S28", "B89", "R69"],
+             "SE": ["S43", "W09", "S28", "B89", "R69"], "AV": ["S43", "W09", "S28", "B89", "R69"]},
+    "Bezza": {"G": ["S43", "W09", "S28", "B81", "R67"], "X": ["S43", "W09", "S28", "B81", "R67"], "AV": ["S43", "W09", "S28", "B81", "R67"]},
+    "Myvi": {"G": ["W09", "S28", "B77"], "X": ["S43", "W09", "S28", "B77", "R76"], "H": ["S43", "W09", "S28", "B77", "R76"], "AV": ["S43", "W09", "S28", "B77", "R76"]},
+    "Ativa": {"X": ["S43", "S28", "W25"], "H": ["S43", "S28", "B79", "W25", "R75"], "AV": ["S43", "S28", "W25", "R75", "XJ3", "XJ2"]},
+    "Alza": {"X": ["W09", "S28", "R67", "X16", "T35"], "H": ["W09", "S28", "R67", "X16", "T35"], "AV": ["W09", "S28", "R67", "X16", "T35"]},
+    "Aruz": {"X": ["S43", "W09", "S28", "B77", "R67", "X16"], "AV": ["S43", "W09", "S28", "B77", "R67", "X16"]}
 }
 
 interest_rates_dict = {
-    "Axia": [3.3],
-    "Bezza": [3.3],
-    "Myvi": [3.3],
-    "Ativa": [2.7],
-    "Alza": [2.7],
-    "Aruz": [2.7]
+    "Axia": [3.3], "Bezza": [3.3], "Myvi": [3.3], "Ativa": [2.7], "Alza": [2.7], "Aruz": [2.7]
 }
-loan_tenures = [5, 7, 9]
+loan_tenures = [9, 7, 5]  # Set 9 as default
 
 st.title("🚗 Fadhu Perodua Financing Calculator")
 
@@ -90,27 +47,21 @@ rebate = 0
 rebate_display = ""
 if selected_car in ["Ativa", "Aruz"]:
     rebate_option = st.sidebar.selectbox("Rebate Option", ["None", "RM 1,000", "RM 3,500"])
-    if rebate_option == "RM 1,000":
-        rebate = 1000
-        rebate_display = "RM 1,000"
-    elif rebate_option == "RM 3,500":
-        rebate = 3500
-        rebate_display = "RM 3,500"
-    else:
-        rebate_display = "None"
+    rebate_display = rebate_option if rebate_option != "None" else ""
+    rebate = int(rebate_display.replace("RM ", "").replace(",", "")) if rebate_display else 0
 else:
     st.sidebar.selectbox("Rebate Option", ["Not applicable for this model"], disabled=True)
 
-# Color dots + color name
+# Color dot with code
 if selected_car in variant_colors and selected_model in variant_colors[selected_car]:
     st.sidebar.markdown("### 🎨 Available Colors")
     for code in variant_colors[selected_car][selected_model]:
+        color_name = [k for k in color_codes.keys() if k == code]
         hex_color = color_codes.get(code, "#000000")
-        name = [k for k, v in color_codes.items() if k.startswith(code)][0] if code in color_codes else code
         st.sidebar.markdown(
             f"<div style='display:flex;align-items:center;gap:10px;'>"
             f"<div style='width:15px;height:15px;border-radius:50%;background:{hex_color};border:1px solid #ccc;'></div>"
-            f"<span style='font-size:14px'>{name}</span></div>",
+            f"<span style='font-size:14px'>{code}</span></div>",
             unsafe_allow_html=True
         )
 
@@ -121,8 +72,6 @@ deposit_10_percent = otr_price * 0.10
 def calculate_monthly_payment(loan_amount, interest_rate, tenure_years):
     monthly_rate = interest_rate / 100 / 12
     payments = tenure_years * 12
-    if monthly_rate == 0:
-        return loan_amount / payments
     return loan_amount * monthly_rate * (1 + monthly_rate) ** payments / ((1 + monthly_rate) ** payments - 1)
 
 loan_full = otr_price
@@ -133,31 +82,16 @@ monthly_full = calculate_monthly_payment(loan_full, selected_interest, selected_
 monthly_10_percent = calculate_monthly_payment(loan_10_percent, selected_interest, selected_tenure)
 monthly_custom = calculate_monthly_payment(loan_custom, selected_interest, selected_tenure)
 
-description = ["OTR Price"]
-amounts = [f"RM {otr_base_price:,.2f}"]
-
+# Display in styled layout instead of table
+st.subheader(f"{selected_car} {selected_model} Financing Breakdown")
+st.markdown(f"**OTR Price**: RM {otr_base_price:,.2f}")
 if rebate > 0:
-    description.append("Rebate Applied")
-    amounts.append(f"{rebate_display}")
+    st.markdown(f"**Rebate Applied**: {rebate_display}")
+st.markdown(f"**10% Deposit**: RM {deposit_10_percent:,.2f}")
+st.markdown(f"**Monthly Payment (Full Loan)**: RM {monthly_full:,.2f}")
+st.markdown(f"**Monthly Payment (10% Deposit)**: RM {monthly_10_percent:,.2f}")
+st.markdown(f"**Monthly Payment (Custom Deposit RM {custom_deposit:,.0f})**: RM {monthly_custom:,.2f}")
+st.markdown(f"**Loan Tenure**: {selected_tenure} years")
+st.markdown(f"**Interest Rate**: {selected_interest}%")
 
-description += [
-    "10% Deposit",
-    "Monthly Payment (Full Loan)",
-    "Monthly Payment (10% Deposit)",
-    f"Monthly Payment (Custom Deposit RM {custom_deposit:,.0f})",
-    "Loan Tenure (Years)",
-    "Interest Rate (%)"
-]
-amounts += [
-    f"RM {deposit_10_percent:,.2f}",
-    f"RM {monthly_full:,.2f}",
-    f"RM {monthly_10_percent:,.2f}",
-    f"RM {monthly_custom:,.2f}",
-    f"{selected_tenure}",
-    f"{selected_interest}"
-]
-
-df = pd.DataFrame({"Description": description, "Amount": amounts})
-st.subheader(f"{selected_car} {selected_model} Financing Details")
-st.table(df)
 st.markdown("*Calculations are based on DC Auto Pricelist, latest update April 2025.*")
