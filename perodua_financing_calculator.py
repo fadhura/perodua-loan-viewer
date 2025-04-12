@@ -13,6 +13,16 @@ car_data = {
     "Aruz": {"X": 75600, "AV": 80700}
 }
 
+car_colors = {
+    "Axia": {
+        "Granite Grey (S43)": "#505050",
+        "Glittering Silver (S28)": "#B0B0B0",
+        "Coral Blur (B89)": "#5CA4B6",
+        "Ivory White (W09)": "#F9F9F9",
+        "Lava Red (R69)": "#B10F2E"
+    }
+}
+
 interest_rates_dict = {
     "Axia": [3.3],
     "Bezza": [3.3],
@@ -26,10 +36,11 @@ loan_tenures = [5, 7, 9]
 st.title("🚗 Fadhu Perodua Financing Calculator")
 
 st.sidebar.header("Select Car Details")
-selected_car = st.sidebar.selectbox("Car Type", list(car_data.keys()))
-selected_model = st.sidebar.selectbox("Model", list(car_data[selected_car].keys()))
+selected_car = st.sidebar.selectbox("Car Model", list(car_data.keys()))
+selected_model = st.sidebar.selectbox("Variants", list(car_data[selected_car].keys()))
 selected_interest = st.sidebar.selectbox("Interest Rate (%)", interest_rates_dict[selected_car])
 selected_tenure = st.sidebar.selectbox("Loan Tenure (Years)", loan_tenures)
+custom_deposit = st.sidebar.number_input("💸 Custom Deposit (RM)", min_value=0, value=0, step=500)
 
 rebate = 0
 rebate_display = ""
@@ -46,6 +57,12 @@ if selected_car in ["Ativa", "Aruz"]:
 else:
     st.sidebar.selectbox("Rebate Option", ["Not applicable for this model"], disabled=True)
 
+# Color selection
+if selected_car in car_colors:
+    st.sidebar.markdown("### 🎨 Select Color")
+    for color_name, hex_code in car_colors[selected_car].items():
+        st.sidebar.markdown(f"<div style='display:flex;align-items:center;gap:10px;'><div style='width:15px;height:15px;border-radius:50%;background:{hex_code};'></div><span>{color_name}</span></div>", unsafe_allow_html=True)
+
 otr_base_price = car_data[selected_car][selected_model]
 otr_price = otr_base_price - rebate
 deposit_10_percent = otr_price * 0.10
@@ -59,13 +76,11 @@ def calculate_monthly_payment(loan_amount, interest_rate, tenure_years):
 
 loan_full = otr_price
 loan_10_percent = otr_price - deposit_10_percent
-loan_10k = otr_price - 10000
-loan_5k = otr_price - 5000
+loan_custom = otr_price - custom_deposit
 
 monthly_full = calculate_monthly_payment(loan_full, selected_interest, selected_tenure)
 monthly_10_percent = calculate_monthly_payment(loan_10_percent, selected_interest, selected_tenure)
-monthly_10k = calculate_monthly_payment(loan_10k, selected_interest, selected_tenure)
-monthly_5k = calculate_monthly_payment(loan_5k, selected_interest, selected_tenure)
+monthly_custom = calculate_monthly_payment(loan_custom, selected_interest, selected_tenure)
 
 description = ["OTR Price"]
 amounts = [f"RM {otr_base_price:,.2f}"]
@@ -78,8 +93,7 @@ description += [
     "10% Deposit",
     "Monthly Payment (Full Loan)",
     "Monthly Payment (10% Deposit)",
-    "Monthly Payment (RM 10k Deposit)",
-    "Monthly Payment (RM 5k Deposit)",
+    f"Monthly Payment (Custom Deposit RM {custom_deposit:,.0f})",
     "Loan Tenure (Years)",
     "Interest Rate (%)"
 ]
@@ -87,8 +101,7 @@ amounts += [
     f"RM {deposit_10_percent:,.2f}",
     f"RM {monthly_full:,.2f}",
     f"RM {monthly_10_percent:,.2f}",
-    f"RM {monthly_10k:,.2f}",
-    f"RM {monthly_5k:,.2f}",
+    f"RM {monthly_custom:,.2f}",
     f"{selected_tenure}",
     f"{selected_interest}"
 ]
