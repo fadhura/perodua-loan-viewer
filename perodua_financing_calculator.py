@@ -13,13 +13,57 @@ car_data = {
     "Aruz": {"X": 75600, "AV": 80700}
 }
 
-car_colors = {
+color_codes = {
+    "S28": "#C0C0C0",  # Glittering Silver
+    "S43": "#4B4B4B",  # Granite Grey
+    "W09": "#FFFFFF",  # Ivory White
+    "B89": "#00AEEF",  # Coral Blue
+    "R69": "#B22222",  # Lava Red
+    "B81": "#0077BE",  # Ocean Blue
+    "R67": "#8B0000",  # Garnet Red
+    "B77": "#1E90FF",  # Electric Blue
+    "R76": "#8B1E3F",  # Cranberry Red
+    "W25": "#F5F5F5",  # Pearl Diamond White
+    "B79": "#0033A0",  # Cobalt Blue
+    "R75": "#8B0000",  # Pearl Delima Red
+    "XJ3": "#DDDDDD",  # Two Tone Pearl Diamond White
+    "XJ2": "#660000",  # Two Tone Pearl Delima Red
+    "X16": "#2E2E2E",  # Elegant Black
+    "T35": "#5C4033",  # Vintage Brown
+}
+
+variant_colors = {
     "Axia": {
-        "Granite Grey (S43)": "#505050",
-        "Glittering Silver (S28)": "#B0B0B0",
-        "Coral Blur (B89)": "#5CA4B6",
-        "Ivory White (W09)": "#F9F9F9",
-        "Lava Red (R69)": "#B10F2E"
+        "E": ["S43", "W09", "S28"],
+        "G": ["S43", "W09", "S28", "B89", "R69"],
+        "X": ["S43", "W09", "S28", "B89", "R69"],
+        "SE": ["S43", "W09", "S28", "B89", "R69"],
+        "AV": ["S43", "W09", "S28", "B89", "R69"]
+    },
+    "Bezza": {
+        "G": ["S43", "W09", "S28", "B81", "R67"],
+        "X": ["S43", "W09", "S28", "B81", "R67"],
+        "AV": ["S43", "W09", "S28", "B81", "R67"]
+    },
+    "Myvi": {
+        "G": ["W09", "S28", "B77"],
+        "X": ["S43", "W09", "S28", "B77", "R76"],
+        "H": ["S43", "W09", "S28", "B77", "R76"],
+        "AV": ["S43", "W09", "S28", "B77", "R76"]
+    },
+    "Ativa": {
+        "X": ["S43", "S28", "W25"],
+        "H": ["S43", "S28", "B79", "W25", "R75"],
+        "AV": ["S43", "S28", "W25", "R75", "XJ3", "XJ2"]
+    },
+    "Alza": {
+        "X": ["W09", "S28", "R67", "X16", "T35"],
+        "H": ["W09", "S28", "R67", "X16", "T35"],
+        "AV": ["W09", "S28", "R67", "X16", "T35"]
+    },
+    "Aruz": {
+        "X": ["S43", "W09", "S28", "B77", "R67", "X16"],
+        "AV": ["S43", "W09", "S28", "B77", "R67", "X16"]
     }
 }
 
@@ -57,11 +101,16 @@ if selected_car in ["Ativa", "Aruz"]:
 else:
     st.sidebar.selectbox("Rebate Option", ["Not applicable for this model"], disabled=True)
 
-# Color selection
-if selected_car in car_colors:
-    st.sidebar.markdown("### 🎨 Select Color")
-    for color_name, hex_code in car_colors[selected_car].items():
-        st.sidebar.markdown(f"<div style='display:flex;align-items:center;gap:10px;'><div style='width:15px;height:15px;border-radius:50%;background:{hex_code};'></div><span>{color_name}</span></div>", unsafe_allow_html=True)
+if selected_car in variant_colors and selected_model in variant_colors[selected_car]:
+    st.sidebar.markdown("### 🎨 Available Colors")
+    for code in variant_colors[selected_car][selected_model]:
+        hex_color = color_codes.get(code, "#000000")
+        st.sidebar.markdown(
+            f"<div style='display:flex;align-items:center;gap:10px;'>"
+            f"<div style='width:15px;height:15px;border-radius:50%;background:{hex_color};border:1px solid #ccc;'></div>"
+            f"<span>{code}</span></div>",
+            unsafe_allow_html=True
+        )
 
 otr_base_price = car_data[selected_car][selected_model]
 otr_price = otr_base_price - rebate
@@ -107,8 +156,6 @@ amounts += [
 ]
 
 df = pd.DataFrame({"Description": description, "Amount": amounts})
-
 st.subheader(f"{selected_car} {selected_model} Financing Details")
 st.table(df)
-
 st.markdown("*Calculations are based on DC Auto Pricelist, latest update April 2025.*")
