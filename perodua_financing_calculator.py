@@ -101,14 +101,16 @@ if selected_car in ["Ativa", "Aruz"]:
 else:
     st.sidebar.selectbox("Rebate Option", ["Not applicable for this model"], disabled=True)
 
+# Color dots + color name
 if selected_car in variant_colors and selected_model in variant_colors[selected_car]:
     st.sidebar.markdown("### 🎨 Available Colors")
     for code in variant_colors[selected_car][selected_model]:
         hex_color = color_codes.get(code, "#000000")
+        name = [k for k, v in color_codes.items() if k.startswith(code)][0] if code in color_codes else code
         st.sidebar.markdown(
             f"<div style='display:flex;align-items:center;gap:10px;'>"
             f"<div style='width:15px;height:15px;border-radius:50%;background:{hex_color};border:1px solid #ccc;'></div>"
-            f"<span>{code}</span></div>",
+            f"<span style='font-size:14px'>{name}</span></div>",
             unsafe_allow_html=True
         )
 
