@@ -1,9 +1,6 @@
 
 import streamlit as st
 import pandas as pd
-import plotly.figure_factory as ff
-import io
-from PIL import Image
 
 st.set_page_config(page_title="Fadhu Perodua Financing Calculator", layout="centered")
 
@@ -70,12 +67,8 @@ monthly_10_percent = calculate_monthly_payment(loan_10_percent, selected_interes
 monthly_10k = calculate_monthly_payment(loan_10k, selected_interest, selected_tenure)
 monthly_5k = calculate_monthly_payment(loan_5k, selected_interest, selected_tenure)
 
-description = [
-    "OTR Price",
-]
-amounts = [
-    f"RM {otr_base_price:,.2f}",
-]
+description = ["OTR Price"]
+amounts = [f"RM {otr_base_price:,.2f}"]
 
 if rebate > 0:
     description.append("Rebate Applied")
@@ -100,26 +93,9 @@ amounts += [
     f"{selected_interest}"
 ]
 
-df = pd.DataFrame({
-    "Description": description,
-    "Amount": amounts
-})
+df = pd.DataFrame({"Description": description, "Amount": amounts})
 
 st.subheader(f"{selected_car} {selected_model} Financing Details")
 st.table(df)
-
-fig = ff.create_table(df)
-img_bytes = fig.to_image(format="png")
-img = Image.open(io.BytesIO(img_bytes)).convert("RGB")
-buffer = io.BytesIO()
-img.save(buffer, format="JPEG")
-buffer.seek(0)
-
-st.download_button(
-    label="📸 Download Table as JPG",
-    data=buffer,
-    file_name=f"{selected_car}_{selected_model}_financing.jpg",
-    mime="image/jpeg"
-)
 
 st.markdown("*Calculations are based on DC Auto Pricelist, latest update April 2025.*")
