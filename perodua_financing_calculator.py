@@ -115,7 +115,7 @@ monthly_10_percent = calculate_monthly_payment(loan_10_percent, interest, select
 monthly_custom = calculate_monthly_payment(loan_custom, interest, selected_tenure)
 
 st.markdown("### 💰 Financing Breakdown")
-st.markdown(f"""<div class="info-card"><span class="info-label">OTR Price</span>RM {otr_base_price:,.2f}""", unsafe_allow_html=True) RM {otr_base_price:,.2f}")
+st.markdown(f"""<div class="info-card"><span class='info-label'>OTR Price</span>RM {otr_base_price:,.2f}</div>""", unsafe_allow_html=True) RM {otr_base_price:,.2f}")
 if rebate > 0:
     st.markdown(f"**Rebate Applied**: {rebate_display}")
 st.markdown(f"**10% Deposit**: RM {deposit_10_percent:,.2f}")
