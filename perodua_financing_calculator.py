@@ -1,13 +1,59 @@
 
 import streamlit as st
 import pandas as pd
-from fpdf import FPDF
-import base64
-import tempfile
 
 st.set_page_config(page_title="Fadhu Perodua Financing Calculator", layout="centered")
+st.markdown("""
+<style>
+    .block-container {
+        max-width: 430px;
+        margin: auto;
+        padding: 1rem;
+    }
+    .stApp {
+        font-size: 16px;
+    }
+    .info-card {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 12px 16px;
+        margin-bottom: 12px;
+        box-shadow: 1px 1px 6px rgba(0,0,0,0.05);
+    }
+    .info-label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 2px;
+    }
+    .float-button {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background-color: #5e60ce;
+        color: white;
+        padding: 12px 16px;
+        border-radius: 50px;
+        font-size: 16px;
+        text-align: center;
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        cursor: pointer;
+    }
+    .float-button:hover {
+        background-color: #3f429d;
+    }
+</style>
 
-# Mobile-friendly styling
+<script>
+    function scrollToTop() {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+</script>
+
+<div class="float-button" onclick="scrollToTop()">⬆️ Top</div>
+""", unsafe_allow_html=True)
+
 st.markdown("""
     <style>
         .block-container {
@@ -18,7 +64,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Car data
 car_data = {
     "Axia": {"E": 23100, "G": 40190, "X": 41630, "SE": 45740, "AV": 51390},
     "Bezza": {"G": 38170, "X": 45820, "AV": 51920},
@@ -28,65 +73,16 @@ car_data = {
     "Aruz": {"X": 75600, "AV": 80700}
 }
 
-color_codes = {
-    "S28": "#C0C0C0", "S43": "#4B4B4B", "W09": "#FFFFFF", "B89": "#00AEEF", "R69": "#B22222",
-    "B81": "#0077BE", "R67": "#8B0000", "B77": "#1E90FF", "R76": "#8B1E3F", "W25": "#F5F5F5",
-    "B79": "#0033A0", "R75": "#8B0000", "XJ3": "#DDDDDD", "XJ2": "#660000", "X16": "#2E2E2E", "T35": "#5C4033"
-}
-
-color_labels = {
-    "S28": "Glittering Silver", "S43": "Granite Grey", "W09": "Ivory White", "B89": "Coral Blue", "R69": "Lava Red",
-    "B81": "Ocean Blue", "R67": "Garnet Red", "B77": "Electric Blue", "R76": "Cranberry Red",
-    "W25": "Pearl Diamond White", "B79": "Cobalt Blue", "R75": "Pearl Delima Red",
-    "XJ3": "Two Tone Pearl Diamond White", "XJ2": "Two Tone Pearl Delima Red",
-    "X16": "Elegant Black", "T35": "Vintage Brown"
-}
-
-variant_colors = {
-    "Axia": {
-        "E": ["S43", "W09", "S28"],
-        "G": ["S43", "W09", "S28", "B89", "R69"],
-        "X": ["S43", "W09", "S28", "B89", "R69"],
-        "SE": ["S43", "W09", "S28", "B89", "R69"],
-        "AV": ["S43", "W09", "S28", "B89", "R69"]
-    },
-    "Bezza": {
-        "G": ["S43", "W09", "S28", "B81", "R67"],
-        "X": ["S43", "W09", "S28", "B81", "R67"],
-        "AV": ["S43", "W09", "S28", "B81", "R67"]
-    },
-    "Myvi": {
-        "G": ["W09", "S28", "B77"],
-        "X": ["S43", "W09", "S28", "B77", "R76"],
-        "H": ["S43", "W09", "S28", "B77", "R76"],
-        "AV": ["S43", "W09", "S28", "B77", "R76"]
-    },
-    "Ativa": {
-        "X": ["S43", "S28", "W25"],
-        "H": ["S43", "S28", "B79", "W25", "R75"],
-        "AV": ["S43", "S28", "W25", "R75", "XJ3", "XJ2"]
-    },
-    "Alza": {
-        "X": ["W09", "S28", "R67", "X16", "T35"],
-        "H": ["W09", "S28", "R67", "X16", "T35"],
-        "AV": ["W09", "S28", "R67", "X16", "T35"]
-    },
-    "Aruz": {
-        "X": ["S43", "W09", "S28", "B77", "R67", "X16"],
-        "AV": ["S43", "W09", "S28", "B77", "R67", "X16"]
-    }
-}
-
 interest_rates_dict = {
-    "Axia": [3.3], "Bezza": [3.3], "Myvi": [3.3], "Ativa": [2.7], "Alza": [2.7], "Aruz": [2.7]
+    "Axia": 3.3, "Bezza": 3.3, "Myvi": 3.3, "Ativa": 2.7, "Alza": 2.7, "Aruz": 2.7
 }
 loan_tenures = [9, 7, 5]
 
-# Sidebar selections
+st.title("🚗 Fadhu Perodua Financing Calculator")
+
 st.sidebar.header("Select Car Details")
 selected_car = st.sidebar.selectbox("Car Model", list(car_data.keys()))
 selected_model = st.sidebar.selectbox("Variants", list(car_data[selected_car].keys()))
-selected_interest = st.sidebar.selectbox("Interest Rate (%)", interest_rates_dict[selected_car])
 selected_tenure = st.sidebar.selectbox("Loan Tenure (Years)", loan_tenures)
 custom_deposit = st.sidebar.number_input("💸 Custom Deposit (RM)", min_value=0, value=0, step=500)
 
@@ -100,40 +96,26 @@ if selected_car in ["Ativa", "Aruz"]:
 else:
     st.sidebar.selectbox("Rebate Option", ["Not applicable for this model"], disabled=True)
 
-# Color display
-if selected_car in variant_colors and selected_model in variant_colors[selected_car]:
-    st.sidebar.markdown("### 🎨 Available Colors")
-    for code in variant_colors[selected_car][selected_model]:
-        hex_color = color_codes.get(code, "#000000")
-        label = f"{color_labels.get(code, 'Unknown')} : {code}"
-        st.sidebar.markdown(
-            f"<div style='display:flex;align-items:center;gap:10px;'>"
-            f"<div style='width:15px;height:15px;border-radius:50%;background:{hex_color};border:1px solid #ccc;'></div>"
-            f"<span style='font-size:14px'>{label}</span></div>",
-            unsafe_allow_html=True
-        )
-
-# Financing calculation
-otr_base_price = car_data[selected_car][selected_model]
-otr_price = otr_base_price - rebate
-deposit_10_percent = otr_price * 0.10
-
 def calculate_monthly_payment(loan_amount, interest_rate, tenure_years):
     monthly_rate = interest_rate / 100 / 12
     payments = tenure_years * 12
     return loan_amount * monthly_rate * (1 + monthly_rate) ** payments / ((1 + monthly_rate) ** payments - 1)
 
+otr_base_price = car_data[selected_car][selected_model]
+otr_price = otr_base_price - rebate
+deposit_10_percent = otr_price * 0.10
+
 loan_full = otr_price
 loan_10_percent = otr_price - deposit_10_percent
 loan_custom = otr_price - custom_deposit
+interest = interest_rates_dict[selected_car]
 
-monthly_full = calculate_monthly_payment(loan_full, selected_interest, selected_tenure)
-monthly_10_percent = calculate_monthly_payment(loan_10_percent, selected_interest, selected_tenure)
-monthly_custom = calculate_monthly_payment(loan_custom, selected_interest, selected_tenure)
+monthly_full = calculate_monthly_payment(loan_full, interest, selected_tenure)
+monthly_10_percent = calculate_monthly_payment(loan_10_percent, interest, selected_tenure)
+monthly_custom = calculate_monthly_payment(loan_custom, interest, selected_tenure)
 
-# Summary output
-st.subheader(f"{selected_car} {selected_model} Financing Breakdown")
-st.markdown(f"**OTR Price**: RM {otr_base_price:,.2f}")
+st.markdown("### 💰 Financing Breakdown")
+st.markdown(f"""<div class="info-card"><span class="info-label">OTR Price</span>RM {otr_base_price:,.2f}""", unsafe_allow_html=True) RM {otr_base_price:,.2f}")
 if rebate > 0:
     st.markdown(f"**Rebate Applied**: {rebate_display}")
 st.markdown(f"**10% Deposit**: RM {deposit_10_percent:,.2f}")
@@ -141,31 +123,24 @@ st.markdown(f"**Monthly Payment (Full Loan)**: RM {monthly_full:,.2f}")
 st.markdown(f"**Monthly Payment (10% Deposit)**: RM {monthly_10_percent:,.2f}")
 st.markdown(f"**Monthly Payment (Custom Deposit RM {custom_deposit:,.0f})**: RM {monthly_custom:,.2f}")
 st.markdown(f"**Loan Tenure**: {selected_tenure} years")
-st.markdown(f"**Interest Rate**: {selected_interest}%")
+st.markdown(f"**Interest Rate**: {interest}%")
 
-st.markdown("*Calculations are based on DC Auto Pricelist, latest update April 2025.*")
+summary_data = []
+for variant, base_price in car_data[selected_car].items():
+    price = base_price - rebate if variant == selected_model else base_price
+    depo = price * 0.10
+    monthly_all = calculate_monthly_payment(price, interest, selected_tenure)
+    monthly_depo = calculate_monthly_payment(price - depo, interest, selected_tenure)
+    summary_data.append({
+        "Variant": f"{selected_car} {variant}",
+        "OTR": f"RM {price:,.2f}",
+        "10% Deposit": f"RM {depo:,.2f}",
+        "Full Loan Monthly": f"RM {monthly_all:,.2f}",
+        "10% Deposit Monthly": f"RM {monthly_depo:,.2f}"
+    })
 
-# PDF Export
-if st.button("📄 Download Financing Summary as PDF"):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
-    pdf.cell(200, 10, txt=f"{selected_car} {selected_model} Financing Summary", ln=True, align='C')
-    pdf.set_font("Arial", size=11)
-    pdf.ln(10)
-    pdf.cell(200, 10, txt=f"OTR Price: RM {otr_base_price:,.2f}", ln=True)
-    if rebate > 0:
-        pdf.cell(200, 10, txt=f"Rebate Applied: {rebate_display}", ln=True)
-    pdf.cell(200, 10, txt=f"10% Deposit: RM {deposit_10_percent:,.2f}", ln=True)
-    pdf.cell(200, 10, txt=f"Monthly Payment (Full Loan): RM {monthly_full:,.2f}", ln=True)
-    pdf.cell(200, 10, txt=f"Monthly Payment (10% Deposit): RM {monthly_10_percent:,.2f}", ln=True)
-    pdf.cell(200, 10, txt=f"Monthly Payment (Custom Deposit RM {custom_deposit:,.0f}): RM {monthly_custom:,.2f}", ln=True)
-    pdf.cell(200, 10, txt=f"Loan Tenure: {selected_tenure} years", ln=True)
-    pdf.cell(200, 10, txt=f"Interest Rate: {selected_interest}%", ln=True)
+st.markdown("### 📊 Variant Summary")
+st.dataframe(pd.DataFrame(summary_data), use_container_width=True)
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmpfile:
-        pdf.output(tmpfile.name)
-        with open(tmpfile.name, "rb") as f:
-            base64_pdf = base64.b64encode(f.read()).decode("utf-8")
-            href = f'<a href="data:application/pdf;base64,{base64_pdf}" download="Fadhu_Financing_Summary.pdf">📥 Click here to download your PDF</a>'
-            st.markdown(href, unsafe_allow_html=True)
+st.markdown("📸 You may take a screenshot or copy the table for sharing.")
+st.markdown("*📝 Calculations are based on DC Auto Pricelist, latest update April 2025.*")
