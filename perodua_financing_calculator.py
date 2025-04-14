@@ -2,12 +2,12 @@
 import streamlit as st
 import pandas as pd
 
-st.set_page_config(page_title="Fadhu Perodua Financing Calculator", layout="centered")
+st.markdown('<div style="font-size:5px; font-weight:200; white-space:nowrap;">🚗 Fadhu Perodua Financing Calculator</div>', unsafe_allow_html=True)
 
 st.markdown("""
     <style>
         .block-container {
-            max-width: 430px;
+            max-width: 500px;
             margin: auto;
             padding: 1rem;
         }
@@ -28,7 +28,7 @@ interest_rates_dict = {
 }
 loan_tenures = [9, 7, 5]
 
-st.title("🚗 Fadhu Perodua Financing Calculator")
+st.title("🚗 Fadhu Perodua Loan Calc")
 
 st.sidebar.header("Select Car Details")
 selected_car = st.sidebar.selectbox("Car Model", list(car_data.keys()))
@@ -42,7 +42,7 @@ if selected_car in ["Ativa", "Aruz"]:
     rebate_option = st.sidebar.selectbox("Rebate Option", ["None", "RM 1,000", "RM 3,500"])
     if rebate_option != "None":
         rebate = int(rebate_option.replace("RM ", "").replace(",", ""))
-        rebate_display = rebate_option
+        rebate_display = rebates
 else:
     st.sidebar.selectbox("Rebate Option", ["Not applicable for this model"], disabled=True)
 
@@ -84,12 +84,12 @@ for variant, base_price in car_data[selected_car].items():
     summary_data.append({
         "Variant": f"{selected_car} {variant}",
         "OTR": f"RM {price:,.2f}",
-        "10% Deposit": f"RM {depo:,.2f}",
-        "Full Loan Monthly": f"RM {monthly_all:,.2f}",
-        "10% Deposit Monthly": f"RM {monthly_depo:,.2f}"
+        "10% Depo": f"RM {depo:,.2f}",
+        "FL Monthly": f"RM {monthly_all:,.2f}",
+        "10% Depo Monthly": f"RM {monthly_depo:,.2f}"
     })
 
-st.markdown("### 📊 Variant Summary")
+st.markdown("### 📊 Model Summary")
 st.dataframe(pd.DataFrame(summary_data), use_container_width=True)
 
 st.markdown("📸 You may take a screenshot or copy the table for sharing.")
