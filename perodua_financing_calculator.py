@@ -38,17 +38,19 @@ custom_deposit = st.sidebar.number_input("💸 Custom Deposit (RM)", min_value=0
 rebate = 0
 rebate_display = ""
 if selected_car in ["Ativa", "Aruz"]:
-    rebate_option = st.sidebar.selectbox("Rebate Option", ["None", "RM 1,000", "RM 3,500"])
-    if rebate_option != "None":
-        rebate = int(rebate_option.replace("RM ", "").replace(",", ""))
-        rebate_display = rebates
+    rebate_april = st.sidebar.selectbox("Rebate Option", ["None", "RM 1,000", "RM 3,500"])
+    if rebate_april != "None":
+        rebate = int(rebate_april.replace("RM ", "").replace(",", ""))
+        rebate_display = rebate_april
 else:
     st.sidebar.selectbox("Rebate Option", ["Not applicable for this model"], disabled=True)
 
+
 def calculate_monthly_payment(loan_amount, interest_rate, tenure_years):
-    monthly_rate = interest_rate / 100 / 12
-    payments = tenure_years * 12
-    return loan_amount * monthly_rate * (1 + monthly_rate) ** payments / ((1 + monthly_rate) ** payments - 1)
+    total_interest = loan_amount * (interest_rate / 100) * tenure_years
+    total_payment = loan_amount + total_interest
+    return total_payment / (tenure_years * 12)
+
 
 otr_base_price = car_data[selected_car][selected_model]
 otr_price = otr_base_price - rebate
