@@ -2,8 +2,6 @@
 import streamlit as st
 import pandas as pd
 
-st.markdown('<div style="font-size:5px; font-weight:200; white-space:nowrap;">🚗 Fadhu Perodua Financing Calculator</div>', unsafe_allow_html=True)
-
 st.markdown("""
     <style>
         .block-container {
@@ -28,11 +26,12 @@ interest_rates_dict = {
 }
 loan_tenures = [9, 7, 5]
 
-st.title("🚗 Fadhu Perodua Loan Calc")
+st.markdown('<div style="font-size:36px; font-weight:700; white-space:nowrap;">🚗 Fadhu Perodua Loan Calc 🚗</div>', unsafe_allow_html=True)
+
 
 st.sidebar.header("Select Car Details")
-selected_car = st.sidebar.selectbox("Car Model", list(car_data.keys()))
-selected_model = st.sidebar.selectbox("Variants", list(car_data[selected_car].keys()))
+selected_car = st.sidebar.selectbox("Car Model", list(car_data.keys()), index=list(car_data.keys()).index("Myvi"))
+selected_model = st.sidebar.selectbox("Variants", list(car_data[selected_car].keys()), index=list(car_data[selected_car].keys()).index("AV"))
 selected_tenure = st.sidebar.selectbox("Loan Tenure (Years)", loan_tenures)
 custom_deposit = st.sidebar.number_input("💸 Custom Deposit (RM)", min_value=0, value=0, step=500)
 
