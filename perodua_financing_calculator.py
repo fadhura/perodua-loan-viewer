@@ -3,56 +3,6 @@ import streamlit as st
 import pandas as pd
 
 st.set_page_config(page_title="Fadhu Perodua Financing Calculator", layout="centered")
-st.markdown("""
-<style>
-    .block-container {
-        max-width: 430px;
-        margin: auto;
-        padding: 1rem;
-    }
-    .stApp {
-        font-size: 16px;
-    }
-    .info-card {
-        background-color: #f9f9f9;
-        border: 1px solid #ddd;
-        border-radius: 12px;
-        padding: 12px 16px;
-        margin-bottom: 12px;
-        box-shadow: 1px 1px 6px rgba(0,0,0,0.05);
-    }
-    .info-label {
-        font-weight: bold;
-        display: block;
-        margin-bottom: 2px;
-    }
-    .float-button {
-        position: fixed;
-        bottom: 24px;
-        right: 24px;
-        background-color: #5e60ce;
-        color: white;
-        padding: 12px 16px;
-        border-radius: 50px;
-        font-size: 16px;
-        text-align: center;
-        z-index: 9999;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        cursor: pointer;
-    }
-    .float-button:hover {
-        background-color: #3f429d;
-    }
-</style>
-
-<script>
-    function scrollToTop() {
-        window.scrollTo({top: 0, behavior: 'smooth'});
-    }
-</script>
-
-<div class="float-button" onclick="scrollToTop()">⬆️ Top</div>
-""", unsafe_allow_html=True)
 
 st.markdown("""
     <style>
@@ -114,8 +64,8 @@ monthly_full = calculate_monthly_payment(loan_full, interest, selected_tenure)
 monthly_10_percent = calculate_monthly_payment(loan_10_percent, interest, selected_tenure)
 monthly_custom = calculate_monthly_payment(loan_custom, interest, selected_tenure)
 
-st.markdown("### 💰 Financing Breakdown")
-st.markdown(f"""<div class="info-card"><span class='info-label'>OTR Price</span>RM {otr_base_price:,.2f}</div>""", unsafe_allow_html=True) RM {otr_base_price:,.2f}")
+st.subheader(f"{selected_car} {selected_model} Financing Breakdown")
+st.markdown(f"**OTR Price**: RM {otr_base_price:,.2f}")
 if rebate > 0:
     st.markdown(f"**Rebate Applied**: {rebate_display}")
 st.markdown(f"**10% Deposit**: RM {deposit_10_percent:,.2f}")
@@ -143,4 +93,4 @@ st.markdown("### 📊 Variant Summary")
 st.dataframe(pd.DataFrame(summary_data), use_container_width=True)
 
 st.markdown("📸 You may take a screenshot or copy the table for sharing.")
-st.markdown("*📝 Calculations are based on DC Auto Pricelist, latest update April 2025.*")
+st.markdown("*Calculations are based on DC Auto Pricelist, latest update April 2025.*")
